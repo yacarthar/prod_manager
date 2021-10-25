@@ -1,0 +1,3 @@
+"""
+Defined schema response output
+"""
