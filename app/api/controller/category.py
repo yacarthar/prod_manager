@@ -9,14 +9,18 @@ from app.api.schema.category import CategorySchema
 from app.api.service.category_service import (
     get_all_category,
     create_category,
-    get_category
+    get_category,
+    update_category
 )
 
 api = CategorySchema.api
 category_doc = CategorySchema.category_doc
 
-category_parser = RequestParser()
-category_parser.add_argument(name="name", location="json", required=True)
+parser = RequestParser()
+parser.add_argument(name="name", location="json", required=True)
+parser_update = RequestParser()
+parser_update.add_argument(name="name", location="json")
+
 
 @api.route("/")
 class CategoryList(Resource):
@@ -27,12 +31,11 @@ class CategoryList(Resource):
     def get(self):
         return get_all_category()
 
-
     @api.doc("Create a category")
-    @api.expect(category_parser)
+    @api.expect(parser)
     @api.marshal_with(category_doc)
     def post(self):
-        args = category_parser.parse_args(request)
+        args = parser.parse_args(request)
         return create_category(args)
 
 
@@ -44,3 +47,10 @@ class Category(Resource):
     @api.marshal_with(category_doc)
     def get(self, category_id):
         return get_category(category_id)
+
+    @api.doc("Update a category")
+    @api.expect(parser_update)
+    @api.marshal_with(category_doc)
+    def put(self, category_id):
+        args = parser_update.parse_args(request)
+        return update_category(category_id, args)

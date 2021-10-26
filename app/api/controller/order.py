@@ -7,16 +7,26 @@ from flask_restx.reqparse import RequestParser
 
 from app.api.schema.order import OrderSchema
 
-from app.api.service.order_service import get_all_order, create_order, get_order, delete_order
+from app.api.service.order_service import (
+    get_all_order,
+    create_order,
+    get_order,
+    update_order,
+    delete_order
+)
 from app.api.service.order_detail_service import get_order_detail
 
 api = OrderSchema.api
 order_doc = OrderSchema.order_doc
 order_detail_doc = OrderSchema.order_detail_doc
 
-order_parser = RequestParser()
-order_parser.add_argument(name="user_id", type=int, location="json", required=True)
-order_parser.add_argument(name="invoice", type=str, location="json", required=True)
+parser = RequestParser()
+parser.add_argument(name="user_id", location="json", required=True)
+parser.add_argument(name="invoice", location="json", required=True)
+
+parser_update = RequestParser()
+parser_update.add_argument(name="user_id", location="json")
+parser_update.add_argument(name="invoice", location="json")
 
 @api.route("/")
 class OrderList(Resource):
@@ -29,13 +39,11 @@ class OrderList(Resource):
 
 
     @api.doc("Create a order")
-    @api.expect(order_parser)
+    @api.expect(parser)
     @api.marshal_with(order_doc)
     def post(self):
-        args = order_parser.parse_args(request)
-        user_id, invoice_str = args.get('user_id'), args.get('invoice')
-        new_order = create_order(user_id, invoice_str)
-        return new_order
+        args = parser.parse_args(request)
+        return create_order(args)
 
 
 @api.route("/<int:order_id>")
@@ -47,6 +55,12 @@ class Order(Resource):
     def get(self, order_id):
         return get_order(order_id)
 
+    @api.doc("Update a order")
+    @api.expect(parser_update)
+    @api.marshal_with(order_doc)
+    def put(self, order_id):
+        args = parser_update.parse_args(request)
+        return update_order(order_id, args)
 
     @api.doc("Delete a order")
     # @api.marshal_with(order_doc)
