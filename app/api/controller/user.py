@@ -17,7 +17,7 @@ api = UserSchema.api
 user_doc = UserSchema.user_doc
 
 parser = RequestParser()
-parser.add_argument(name="name", location="json", required=True)
+parser.add_argument(name="username", location="json", required=True)
 parser.add_argument(name="email", location="json", required=False)
 
 parser_update = RequestParser()

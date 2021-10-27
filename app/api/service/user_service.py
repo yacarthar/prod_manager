@@ -3,7 +3,7 @@ Module user service. Handler logic.
 """
 from werkzeug.exceptions import NotFound
 from app.api.model import db, User
-
+from app.core import validate
 
 def get_all_user():
     return list(User.query.all())
