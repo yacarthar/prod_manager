@@ -4,7 +4,8 @@ Module order service. Handler logic.
 
 from werkzeug.exceptions import NotFound
 from sqlalchemy.exc import IntegrityError
-from flask import current_app, jsonify
+# from flask import current_app
+from flask import jsonify
 
 from app.core import validate
 from app.core.errors.errors import UnknownError
@@ -64,7 +65,7 @@ def delete_order(id):
             db.session.delete(order)
 
     except IntegrityError as e: # TBD: causes
-        current_app.logger.exception(e.code)
+        # current_app.logger.exception(e.code)
         raise UnknownError()
     else:
         return jsonify({'info': f'Order {id} deleted!'})

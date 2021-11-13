@@ -13,3 +13,15 @@ class CategorySchema:
             "category_name": fields.String(required=True, attribute="name")
         }
     )
+
+    category_list_doc = api.model(
+        "category_list",
+        {
+            "data": fields.List(fields.Nested(
+                {
+                    "category_id": fields.Integer(required=True),
+                    "category_name": fields.String(required=True)
+                })
+            )
+        }
+    )

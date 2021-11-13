@@ -3,15 +3,17 @@ Module helper config
 """
 
 import os
-from dotenv import load_dotenv
 
+from dotenv import load_dotenv
 from app.constants import ENV_FILE
+
 load_dotenv(ENV_FILE)
 
 class Config:
     DEBUG = False
     SECRET_KEY = os.environ.get('SECRET_KEY')
     FLASK_ENV = os.environ.get('FLASK_ENV')
+    
     # Database
     SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI")
     SQLALCHEMY_ECHO = False
@@ -26,7 +28,8 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     DEBUG = True
     TESTING = True
-    PRESERVE_CONTEXT_ON_EXCEPTION = False
+    SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI_TEST")
+    # PRESERVE_CONTEXT_ON_EXCEPTION = False
 
 
 class ProductionConfig(Config):
@@ -41,5 +44,6 @@ class LocalConfig(Config):
 config_by_name = dict(
     dev=DevelopmentConfig,
     prod=ProductionConfig,
-    local=LocalConfig
+    local=LocalConfig,
+    test=TestingConfig
 )

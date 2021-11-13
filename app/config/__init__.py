@@ -11,7 +11,8 @@ from .config import (
     config_by_name,
 )
 
-CONFIG_NAME = os.environ.get("ENV") or "local"
+
+CONFIG_NAME = os.environ.get("FLASK_ENV") or "local"
 app_config = config_by_name[CONFIG_NAME]
 
 
